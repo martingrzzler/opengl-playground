@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{76DDE5D2-6170-3BF0-B941-7B14E0A6E640}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\include;C:\Users\tille\.conan\data\glew\2.2.0\_\_\package\f923874e83d95e94b1d71b4181e264b3716ade72\include;C:\Users\tille\.conan\data\glm\0.9.9.8\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;C:\Users\tille\.conan\data\stb\cci.20210713\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\include;C:\Users\tille\.conan\data\glew\2.2.0\_\_\package\f923874e83d95e94b1d71b4181e264b3716ade72\include;C:\Users\tille\.conan\data\glm\0.9.9.8\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;C:\Users\tille\.conan\data\stb\cci.20210713\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\include;C:\Users\tille\.conan\data\glew\2.2.0\_\_\package\f923874e83d95e94b1d71b4181e264b3716ade72\include;C:\Users\tille\.conan\data\glm\0.9.9.8\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;C:\Users\tille\.conan\data\stb\cci.20210713\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\include;C:\Users\tille\.conan\data\glew\2.2.0\_\_\package\f923874e83d95e94b1d71b4181e264b3716ade72\include;C:\Users\tille\.conan\data\glm\0.9.9.8\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;C:\Users\tille\.conan\data\stb\cci.20210713\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\CMakeLists.txt">
+      <StdOutEncoding>UTF-8</StdOutEncoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/home/code/SE_17_3D_Rendering/opengl/udemy/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\lib\CMake\bin\cmake.exe -SD:/home/code/SE_17_3D_Rendering/opengl/udemy -BD:/home/code/SE_17_3D_Rendering/opengl/udemy/build --check-stamp-file D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\lib\cmake\conan-official-glfw-targets.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeCXXCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeRCCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeSystem.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\conanbuildinfo.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCXXInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCommonLanguageInclude.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeGenericSystem.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeInitializeConfigs.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeLanguageInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeRCInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInitialize.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\WindowsPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/home/code/SE_17_3D_Rendering/opengl/udemy/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\lib\CMake\bin\cmake.exe -SD:/home/code/SE_17_3D_Rendering/opengl/udemy -BD:/home/code/SE_17_3D_Rendering/opengl/udemy/build --check-stamp-file D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\lib\cmake\conan-official-glfw-targets.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeCXXCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeRCCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeSystem.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\conanbuildinfo.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCXXInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCommonLanguageInclude.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeGenericSystem.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeInitializeConfigs.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeLanguageInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeRCInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInitialize.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\WindowsPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/home/code/SE_17_3D_Rendering/opengl/udemy/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\lib\CMake\bin\cmake.exe -SD:/home/code/SE_17_3D_Rendering/opengl/udemy -BD:/home/code/SE_17_3D_Rendering/opengl/udemy/build --check-stamp-file D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\lib\cmake\conan-official-glfw-targets.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeCXXCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeRCCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeSystem.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\conanbuildinfo.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCXXInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCommonLanguageInclude.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeGenericSystem.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeInitializeConfigs.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeLanguageInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeRCInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInitialize.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\WindowsPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/home/code/SE_17_3D_Rendering/opengl/udemy/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\lib\CMake\bin\cmake.exe -SD:/home/code/SE_17_3D_Rendering/opengl/udemy -BD:/home/code/SE_17_3D_Rendering/opengl/udemy/build --check-stamp-file D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\tille\.conan\data\glfw\3.3.4\_\_\package\d3cffeefc8c8bcb6be8abdd182cb1b56fc81bacc\lib\cmake\conan-official-glfw-targets.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeCXXCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeRCCompiler.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\3.19.5\CMakeSystem.cmake;D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\conanbuildinfo.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCXXInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeCommonLanguageInclude.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeGenericSystem.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeInitializeConfigs.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeLanguageInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeRCInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInformation.cmake;D:\lib\CMake\share\cmake-3.19\Modules\CMakeSystemSpecificInitialize.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Compiler\MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC-CXX.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows-MSVC.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\Windows.cmake;D:\lib\CMake\share\cmake-3.19\Modules\Platform\WindowsPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\ZERO_CHECK.vcxproj">
+      <Project>{CC196BC8-F109-302F-A300-C6B1888299A1}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\app\opengl-udemy.vcxproj">
+      <Project>{907A6B67-C6A4-38AE-A3DA-B9EF2ED10684}</Project>
+      <Name>opengl-udemy</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.vcxproj">
+      <Project>{53FA9E66-53F7-3CB1-964B-759CF24758D6}</Project>
+      <Name>opengl-udemy_lib</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

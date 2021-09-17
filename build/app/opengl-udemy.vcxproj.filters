@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\app\main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\app\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\Camera.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\Mesh.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\ShaderProgram.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\Texture.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\Window.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\lib.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\$(Configuration)\utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object Libraries">
+      <UniqueIdentifier>{29DC4124-E878-39F3-ACFD-FCF42B34A1F9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5BAAB4BE-D303-390D-BD71-7EF4923A2962}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

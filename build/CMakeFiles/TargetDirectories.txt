@@ -1,0 +1,4 @@
+D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/CMakeFiles/ALL_BUILD.dir
+D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/CMakeFiles/ZERO_CHECK.dir
+D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/src/CMakeFiles/opengl-udemy_lib.dir
+D:/home/code/SE_17_3D_Rendering/opengl/udemy/build/app/CMakeFiles/opengl-udemy.dir
