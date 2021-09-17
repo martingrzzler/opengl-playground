@@ -1,2 +1,0 @@
-D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\lib\opengl-udemy_lib.pdb
-D:\home\code\SE_17_3D_Rendering\opengl\udemy\build\src\opengl-udemy_lib.dir\Debug\opengl-udemy_lib.lib
