@@ -8,6 +8,8 @@
 		"iostream": "cpp",
 		"memory": "cpp",
 		"sstream": "cpp",
-		"ostream": "cpp"
-	}
+		"ostream": "cpp",
+		"vector": "cpp"
+	},
+	"C_Cpp.errorSquiggles": "Disabled"
 }

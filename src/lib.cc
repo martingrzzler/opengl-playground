@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "Camera.h"
+#include "Light.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -69,7 +70,9 @@ void run()
 	create_shaders(shaders);
 
 	GLuint uniform_model = 0, uniform_projection = 0;
-	GLuint uniform_view = 0;
+	GLuint uniform_view = 0, uniform_ambient_intensity = 0, uniform_ambient_color = 0;
+
+	Light ambient_light = Light(0.0f, 1.0f, 1.0f, 0.3f);
 
 	Texture tiles = Texture("../../assets/tiles.png");
 	Texture rust = Texture("../../assets/rust.jpg");
@@ -82,6 +85,8 @@ void run()
 	uniform_model = shaders[0]->model_location();
 	uniform_projection = shaders[0]->projection_location();
 	uniform_view = shaders[0]->view_location();
+	uniform_ambient_intensity = shaders[0]->ambient_intensity_location();
+	uniform_ambient_color = shaders[0]->ambient_color_location();
 
 	float scale = 1.0f;
 	bool grow = false;
@@ -108,6 +113,7 @@ void run()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shaders[0]->use();
+		ambient_light.use(uniform_ambient_intensity, uniform_ambient_color);
 		glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.view_matrix()));
 
