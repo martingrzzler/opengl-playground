@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include <iostream>
 
 Mesh::Mesh()
 {
@@ -20,11 +21,14 @@ void Mesh::create(GLfloat *vertices, unsigned int *indices, unsigned int num_of_
 	glBufferData(GL_ARRAY_BUFFER, sizeof(sizeof(vertices[0])) * num_of_vertices, vertices, GL_STATIC_DRAW);
 
 	// enable vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, 0);
 	glEnableVertexAttribArray(0);
 	// enable textures
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void *)(sizeof(vertices[0]) * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void *)(sizeof(vertices[0]) * 3));
 	glEnableVertexAttribArray(1);
+	//enable normals
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void *)(sizeof(vertices[0]) * 5));
+	glEnableVertexAttribArray(2);
 
 	unbind();
 }

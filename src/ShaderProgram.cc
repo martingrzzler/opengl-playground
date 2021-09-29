@@ -16,6 +16,16 @@ GLuint ShaderProgram::projection_location()
 	return _uniform_projection;
 }
 
+GLuint ShaderProgram::diffuse_intensity_location()
+{
+	return _uniform_diffuse_intensity;
+}
+
+GLuint ShaderProgram::direction_location()
+{
+	return _uniform_direction;
+}
+
 GLuint ShaderProgram::view_location()
 {
 	return _uniform_view;
@@ -85,7 +95,9 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 	_uniform_projection = glGetUniformLocation(_program_id, "projection");
 	_uniform_view = glGetUniformLocation(_program_id, "view");
 	_uniform_ambient_color = glGetUniformLocation(_program_id, "directional_light.color");
-	_uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.intensity");
+	_uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.ambient_intensity");
+	_uniform_diffuse_intensity = glGetUniformLocation(_program_id, "directional_light.diffuse_intensity");
+	_uniform_direction = glGetUniformLocation(_program_id, "directional_light.direction");
 }
 
 void ShaderProgram::compile_shader(const char *shader_src, GLenum type)
