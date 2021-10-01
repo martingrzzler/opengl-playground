@@ -11,6 +11,7 @@ public:
 	void key_control(bool *keys, GLfloat delta);
 	void mouse_control(GLfloat x_change, GLfloat y_change);
 	glm::mat4 view_matrix();
+	glm::vec3 position();
 	~Camera();
 
 private:

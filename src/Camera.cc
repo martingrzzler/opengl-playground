@@ -45,6 +45,11 @@ glm::mat4 Camera::view_matrix()
 	return glm::lookAt(_position, _position + _front, _up);
 }
 
+glm::vec3 Camera::position()
+{
+	return _position;
+}
+
 void Camera::key_control(bool *keys, GLfloat delta)
 {
 	GLfloat speed = _movement_speed * delta;

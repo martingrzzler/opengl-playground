@@ -13,6 +13,7 @@
 
 #include "Camera.h"
 #include "Light.h"
+#include "Material.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -51,7 +52,7 @@ void create_shaders(std::vector<std::unique_ptr<ShaderProgram>> &shaders)
 
 void run()
 {
-	Window window = Window();
+	Window window = Window(1366, 768);
 	Camera camera = Camera(
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 1.0f, 0.0f),
@@ -74,17 +75,25 @@ void run()
 
 	GLuint uniform_model = 0, uniform_projection = 0;
 	GLuint uniform_view = 0, uniform_ambient_intensity = 0, uniform_ambient_color = 0,
-				 uniform_diffuse_intensity = 0, uniform_direction = 0;
+				 uniform_diffuse_intensity = 0, uniform_direction = 0, uniform_eye_position = 0,
+				 uniform_specular_intensity = 0, uniform_shininess = 0;
 
-	Light ambient_light = Light(1.0f, 1.0f, 1.0f, 0.2f, 2.0f, -1.0f, -2.0f, 1.0f);
+	Light ambient_light = Light(1.0f, 1.0f, 1.0f, 0.1f,
+															2.0f, -1.0f, 1.0f, 1.0f);
 
 	Texture tiles = Texture("../../assets/tiles.png");
 	Texture rust = Texture("../../assets/rust.jpg");
 	Texture bunt = Texture("../../assets/bunt.jpg");
-	Texture *textures[] = {&tiles, &rust, &bunt};
+	Texture metal = Texture("../../assets/metal.jpg");
+	Texture *textures[] = {&tiles, &rust, &bunt, &metal};
 	tiles.load();
 	rust.load();
 	bunt.load();
+	metal.load();
+
+	Material shiny_mat = Material(1.0f, 128);
+	Material rougher_mat = Material(0.3f, 4);
+	Material *materials[] = {&shiny_mat, &rougher_mat};
 
 	uniform_model = shaders[0]->model_location();
 	uniform_projection = shaders[0]->projection_location();
@@ -93,6 +102,9 @@ void run()
 	uniform_ambient_color = shaders[0]->ambient_color_location();
 	uniform_diffuse_intensity = shaders[0]->diffuse_intensity_location();
 	uniform_direction = shaders[0]->direction_location();
+	uniform_specular_intensity = shaders[0]->specular_intensity_location();
+	uniform_shininess = shaders[0]->shininess_location();
+	uniform_eye_position = shaders[0]->eye_position_location();
 
 	float scale = 1.0f;
 	bool grow = false;
@@ -118,19 +130,23 @@ void run()
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		shaders[0]->use();
 		ambient_light.use(uniform_ambient_intensity, uniform_ambient_color, uniform_diffuse_intensity, uniform_direction);
 		glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.view_matrix()));
+		glm::vec3 cam_pos = camera.position();
+		glUniform3f(uniform_eye_position, cam_pos.x, cam_pos.y, cam_pos.z);
 
 		for (int i = 0; i < meshes.size(); i++)
 		{
 			glm::mat4 model(1.0f);
 			model = glm::translate(model, positions[i]);
-			model = glm::rotate(model, static_cast<float>(glfwGetTime() * i / 2), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(0.6f));
+			// model = glm::rotate(model, static_cast<float>(glfwGetTime() * i / 2), glm::vec3(0.0f, 1.0f, 0.0f));
+			// model = glm::scale(model, glm::vec3(0.6f));
 			glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-			textures[i % 3]->use();
+			textures[i % 4]->use();
+			materials[i % 2]->use(uniform_specular_intensity, uniform_shininess);
 			meshes[i]->render();
 		}
 

@@ -20,7 +20,6 @@ Light::Light(GLfloat r, GLfloat g, GLfloat b, GLfloat amb_intensity, GLfloat dir
 
 void Light::use(GLuint ambient_intensity_loc, GLuint color_loc, GLuint diffuse_intensity_loc, GLuint direction_loc)
 {
-	std::cout << diffuse_intensity_loc << std::endl;
 	glUniform3f(color_loc, _color.x, _color.y, _color.z);
 	glUniform1f(ambient_intensity_loc, _ambient_intensity);
 	glUniform1f(diffuse_intensity_loc, _diffuse_intensity);

@@ -16,6 +16,20 @@ GLuint ShaderProgram::projection_location()
 	return _uniform_projection;
 }
 
+GLuint ShaderProgram::specular_intensity_location()
+{
+	return _uniform_specular_intensity;
+}
+GLuint ShaderProgram::shininess_location()
+{
+	return _uniform_shininess;
+}
+
+GLuint ShaderProgram::eye_position_location()
+{
+	return _uniform_eye_position;
+}
+
 GLuint ShaderProgram::diffuse_intensity_location()
 {
 	return _uniform_diffuse_intensity;
@@ -98,6 +112,9 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 	_uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.ambient_intensity");
 	_uniform_diffuse_intensity = glGetUniformLocation(_program_id, "directional_light.diffuse_intensity");
 	_uniform_direction = glGetUniformLocation(_program_id, "directional_light.direction");
+	_uniform_eye_position = glGetUniformLocation(_program_id, "eye_position");
+	_uniform_specular_intensity = glGetUniformLocation(_program_id, "material.specular_intensity");
+	_uniform_shininess = glGetUniformLocation(_program_id, "material.shininess");
 }
 
 void ShaderProgram::compile_shader(const char *shader_src, GLenum type)
