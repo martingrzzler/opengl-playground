@@ -12,9 +12,10 @@
 #include <vector>
 
 #include "Camera.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "PointLight.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "Window.h"
@@ -78,8 +79,18 @@ void run()
 				 uniform_diffuse_intensity = 0, uniform_direction = 0, uniform_eye_position = 0,
 				 uniform_specular_intensity = 0, uniform_shininess = 0;
 
-	Light ambient_light = Light(1.0f, 1.0f, 1.0f, 0.1f,
-															2.0f, -1.0f, 1.0f, 1.0f);
+	DirectionalLight directional_light = DirectionalLight::builder()
+																					 .direction(2.0f, -1.0f, 1.0f)
+																					 .color(1.0f, 1.0f, 1.0f)
+																					 .diffuse_intensity(0.8f)
+																					 .ambient_intensity(0.2f);
+
+	PointLight point_light = PointLight::builder()
+															 .position(1.0f, -1.0f, 5.0f)
+															 .color(1.0f, 1.0f, 1.0f)
+															 .ambient_intensity(0.2f)
+															 .diffuse_intensity(0.8f)
+															 .attenuation(5.0f, 1.0f, 1.0f);
 
 	Texture tiles = Texture("../../assets/tiles.png");
 	Texture rust = Texture("../../assets/rust.jpg");
@@ -132,7 +143,7 @@ void run()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shaders[0]->use();
-		ambient_light.use(uniform_ambient_intensity, uniform_ambient_color, uniform_diffuse_intensity, uniform_direction);
+		directional_light.use(uniform_ambient_intensity, uniform_ambient_color, uniform_diffuse_intensity, uniform_direction);
 		glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.view_matrix()));
 		glm::vec3 cam_pos = camera.position();
