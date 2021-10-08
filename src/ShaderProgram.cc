@@ -1,9 +1,12 @@
 #include "ShaderProgram.h"
 #include "utils.h"
+#include <fmt/core.h>
+#include <iostream>
 
 ShaderProgram::ShaderProgram()
 {
-	_program_id = _uniform_model = _uniform_projection = _uniform_view = 0;
+	_program_id = _uniform_model = _uniform_projection = _uniform_view = _uniform_point_light_count = 0;
+	_point_light_count = 0;
 }
 
 GLuint ShaderProgram::model_location()
@@ -32,12 +35,12 @@ GLuint ShaderProgram::eye_position_location()
 
 GLuint ShaderProgram::diffuse_intensity_location()
 {
-	return _uniform_diffuse_intensity;
+	return _directional_light.uniform_diffuse_intensity;
 }
 
 GLuint ShaderProgram::direction_location()
 {
-	return _uniform_direction;
+	return _directional_light.uniform_direction;
 }
 
 GLuint ShaderProgram::view_location()
@@ -45,14 +48,14 @@ GLuint ShaderProgram::view_location()
 	return _uniform_view;
 }
 
-GLuint ShaderProgram::ambient_color_location()
+GLuint ShaderProgram::color_location()
 {
-	return _uniform_ambient_color;
+	return _directional_light.uniform_color;
 }
 
 GLuint ShaderProgram::ambient_intensity_location()
 {
-	return _uniform_ambient_intensity;
+	return _directional_light.uniform_ambient_intensity;
 }
 
 void ShaderProgram::create_from_string(const char *v_shader_src, const char *f_shader_src)
@@ -108,13 +111,41 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 	_uniform_model = glGetUniformLocation(_program_id, "model");
 	_uniform_projection = glGetUniformLocation(_program_id, "projection");
 	_uniform_view = glGetUniformLocation(_program_id, "view");
-	_uniform_ambient_color = glGetUniformLocation(_program_id, "directional_light.color");
-	_uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.ambient_intensity");
-	_uniform_diffuse_intensity = glGetUniformLocation(_program_id, "directional_light.diffuse_intensity");
-	_uniform_direction = glGetUniformLocation(_program_id, "directional_light.direction");
+	_directional_light.uniform_color = glGetUniformLocation(_program_id, "directional_light.color");
+	_directional_light.uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.ambient_intensity");
+	_directional_light.uniform_diffuse_intensity = glGetUniformLocation(_program_id, "directional_light.diffuse_intensity");
+	_directional_light.uniform_direction = glGetUniformLocation(_program_id, "directional_light.direction");
 	_uniform_eye_position = glGetUniformLocation(_program_id, "eye_position");
 	_uniform_specular_intensity = glGetUniformLocation(_program_id, "material.specular_intensity");
 	_uniform_shininess = glGetUniformLocation(_program_id, "material.shininess");
+
+	_uniform_point_light_count = glGetUniformLocation(_program_id, "point_light_count");
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+	{
+		std::string buf = fmt::format("point_lights[{}].base.color", i);
+		_point_lights[i].uniform_color = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("point_lights[{}].base.ambient_intensity", i);
+		_point_lights[i].uniform_ambient_intensity = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("point_lights[{}].base.diffuse_intensity", i);
+		_point_lights[i].uniform_diffuse_intensity = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("point_lights[{}].position", i);
+		_point_lights[i].uniform_position = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("point_lights[{}].constant", i);
+		_point_lights[i].uniform_constant = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("point_lights[{}].linear", i);
+		_point_lights[i].uniform_linear = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("point_lights[{}].exponent", i);
+		_point_lights[i].uniform_exponent = glGetUniformLocation(_program_id, buf.c_str());
+	}
+}
+
+void ShaderProgram::use_directional_light(const DirectionalLight &light)
+{
+	light.use(
+			_directional_light.uniform_ambient_intensity,
+			_directional_light.uniform_color,
+			_directional_light.uniform_diffuse_intensity,
+			_directional_light.uniform_direction);
 }
 
 void ShaderProgram::compile_shader(const char *shader_src, GLenum type)

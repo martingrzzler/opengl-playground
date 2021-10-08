@@ -75,8 +75,8 @@ void run()
 	create_shaders(shaders);
 
 	GLuint uniform_model = 0, uniform_projection = 0;
-	GLuint uniform_view = 0, uniform_ambient_intensity = 0, uniform_ambient_color = 0,
-				 uniform_diffuse_intensity = 0, uniform_direction = 0, uniform_eye_position = 0,
+	GLuint uniform_view = 0,
+				 uniform_eye_position = 0,
 				 uniform_specular_intensity = 0, uniform_shininess = 0;
 
 	DirectionalLight directional_light = DirectionalLight::builder()
@@ -109,10 +109,6 @@ void run()
 	uniform_model = shaders[0]->model_location();
 	uniform_projection = shaders[0]->projection_location();
 	uniform_view = shaders[0]->view_location();
-	uniform_ambient_intensity = shaders[0]->ambient_intensity_location();
-	uniform_ambient_color = shaders[0]->ambient_color_location();
-	uniform_diffuse_intensity = shaders[0]->diffuse_intensity_location();
-	uniform_direction = shaders[0]->direction_location();
 	uniform_specular_intensity = shaders[0]->specular_intensity_location();
 	uniform_shininess = shaders[0]->shininess_location();
 	uniform_eye_position = shaders[0]->eye_position_location();
@@ -143,7 +139,7 @@ void run()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shaders[0]->use();
-		directional_light.use(uniform_ambient_intensity, uniform_ambient_color, uniform_diffuse_intensity, uniform_direction);
+		shaders[0]->use_directional_light(directional_light);
 		glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.view_matrix()));
 		glm::vec3 cam_pos = camera.position();

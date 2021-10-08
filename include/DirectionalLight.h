@@ -14,7 +14,7 @@ public:
 									 GLfloat dir_z,
 									 GLfloat diffuse_intensity);
 
-	void use(GLuint ambient_intensity_loc, GLuint color_loc, GLuint diffuse_intensity_loc, GLuint direction_loc);
+	void use(GLuint ambient_intensity_loc, GLuint color_loc, GLuint diffuse_intensity_loc, GLuint direction_loc) const;
 
 	~DirectionalLight();
 	friend class DirectionalLightBuilder;

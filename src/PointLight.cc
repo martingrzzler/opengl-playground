@@ -1,5 +1,4 @@
 #include "PointLight.h"
-#include <iostream>
 
 PointLight::PointLight() : Light()
 {
@@ -30,6 +29,23 @@ PointLight::PointLight() : Light()
 // 	std::cout << "Move Assign contructor" << std::endl;
 // 	return other;
 // }
+
+void PointLight::use(GLuint ambient_intensity_loc,
+										 GLuint color_loc,
+										 GLuint diffuse_intensity_loc,
+										 GLuint position_loc,
+										 GLuint constant_loc,
+										 GLuint linear_loc,
+										 GLuint exponent_loc)
+{
+	glUniform3f(color_loc, _color.x, _color.y, _color.z);
+	glUniform1f(ambient_intensity_loc, _ambient_intensity);
+	glUniform1f(diffuse_intensity_loc, _diffuse_intensity);
+	glUniform3f(position_loc, _position.x, _position.y, _position.z);
+	glUniform1f(constant_loc, _constant);
+	glUniform1f(linear_loc, _linear);
+	glUniform1f(exponent_loc, _exponent);
+}
 
 PointLightBuilder::operator PointLight() const
 {
