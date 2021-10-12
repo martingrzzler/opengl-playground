@@ -25,6 +25,7 @@ public:
 	GLuint eye_position_location();
 
 	void use_directional_light(const DirectionalLight &light);
+	void use_point_lights(PointLight *lights, unsigned int length);
 
 	void use();
 	void unuse();

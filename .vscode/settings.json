@@ -9,7 +9,9 @@
 		"memory": "cpp",
 		"sstream": "cpp",
 		"ostream": "cpp",
-		"vector": "cpp"
+		"vector": "cpp",
+		"xlocnum": "cpp",
+		"fstream": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

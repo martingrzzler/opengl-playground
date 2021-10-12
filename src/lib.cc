@@ -26,9 +26,18 @@ void create_meshes(std::vector<std::unique_ptr<Mesh>> &meshes)
 	GLfloat vertices[] = {
 			//x      y       z    s     t    normal
 			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left 0
-			0.0f, 0.0f, 1.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f,		// in 1
+			0.0f, 0.0f, -2.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f,	// in 1
 			1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,	// right 2
 			0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f};	// up 3
+
+	unsigned int ground_indices[] = {
+			0, 2, 1,
+			1, 2, 3};
+	GLfloat ground_vertices[] = {
+			-10.0f, 0.0f, -10.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, // top left 0
+			10.0f, 0.0f, -10.0f, 10.0f, 10.0f, 0.0f, 0.0f, 0.0f, // top right 1
+			-10.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,	 // bottom left 2
+			10.0f, 0.0f, 10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f};	 // bottom right 3
 
 	unsigned int indices[] = {
 			0, 3, 1,
@@ -36,12 +45,15 @@ void create_meshes(std::vector<std::unique_ptr<Mesh>> &meshes)
 			0, 2, 1,
 			0, 2, 3};
 	utils::calc_avg_normals(indices, 12, vertices, 32, 8, 5);
-	for (int i = 0; i < 20; i++)
-	{
-		auto triangle = std::make_unique<Mesh>();
-		triangle->create(vertices, indices, 32, 12);
-		meshes.push_back(std::move(triangle));
-	}
+
+	auto triangle = std::make_unique<Mesh>();
+	triangle->create(vertices, indices, 32, 12);
+	meshes.push_back(std::move(triangle));
+
+	auto ground = std::make_unique<Mesh>();
+	utils::calc_avg_normals(ground_indices, 6, ground_vertices, 32, 8, 5);
+	ground->create(ground_vertices, ground_indices, 32, 6);
+	meshes.push_back(std::move(ground));
 }
 
 void create_shaders(std::vector<std::unique_ptr<ShaderProgram>> &shaders)
@@ -80,17 +92,30 @@ void run()
 				 uniform_specular_intensity = 0, uniform_shininess = 0;
 
 	DirectionalLight directional_light = DirectionalLight::builder()
-																					 .direction(2.0f, -1.0f, 1.0f)
+																					 .direction(0.0f, 1.0f, 0.0f)
 																					 .color(1.0f, 1.0f, 1.0f)
-																					 .diffuse_intensity(0.8f)
-																					 .ambient_intensity(0.2f);
-
-	PointLight point_light = PointLight::builder()
-															 .position(1.0f, -1.0f, 5.0f)
-															 .color(1.0f, 1.0f, 1.0f)
-															 .ambient_intensity(0.2f)
-															 .diffuse_intensity(0.8f)
-															 .attenuation(5.0f, 1.0f, 1.0f);
+																					 .diffuse_intensity(1.0f)
+																					 .ambient_intensity(0.0f);
+	PointLight point_lights[MAX_POINT_LIGHTS];
+	unsigned int point_light_count = 3;
+	point_lights[0] = PointLight::builder()
+												.position(-4.0f, 0.0f, 0.0f)
+												.color(0.0f, 1.0f, 0.0f)
+												.ambient_intensity(0.1f)
+												.diffuse_intensity(1.0f)
+												.attenuation(0.3f, 0.2f, 0.1f);
+	point_lights[1] = PointLight::builder()
+												.position(4.0f, 0.0f, 0.0f)
+												.color(1.0f, 0.0f, 0.0f)
+												.ambient_intensity(0.1f)
+												.diffuse_intensity(1.0f)
+												.attenuation(0.3f, 0.2f, 0.1f);
+	point_lights[2] = PointLight::builder()
+												.position(0.0f, 0.0f, -7.0f)
+												.color(0.0f, 0.0f, 1.0f)
+												.ambient_intensity(0.1f)
+												.diffuse_intensity(1.0f)
+												.attenuation(0.3f, 0.2f, 0.1f);
 
 	Texture tiles = Texture("../../assets/tiles.png");
 	Texture rust = Texture("../../assets/rust.jpg");
@@ -118,12 +143,6 @@ void run()
 	glm::mat4 projection(1.0f);
 	projection = glm::perspective(glm::radians(45.0f), (GLfloat)window.buffer_width() / window.buffer_height(), 0.1f, 100.0f);
 
-	glm::vec3 positions[100];
-	for (int i = 0; i < meshes.size(); i++)
-	{
-		positions[i] = glm::vec3(-std::rand() % 5 + 2, -std::rand() % 5 + 2, -std::rand() % 10 + 2);
-	}
-
 	while (!window.should_close())
 	{
 		float currentTime = (float)glfwGetTime();
@@ -140,22 +159,28 @@ void run()
 
 		shaders[0]->use();
 		shaders[0]->use_directional_light(directional_light);
+		shaders[0]->use_point_lights(point_lights, point_light_count);
 		glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.view_matrix()));
 		glm::vec3 cam_pos = camera.position();
 		glUniform3f(uniform_eye_position, cam_pos.x, cam_pos.y, cam_pos.z);
 
-		for (int i = 0; i < meshes.size(); i++)
-		{
-			glm::mat4 model(1.0f);
-			model = glm::translate(model, positions[i]);
-			// model = glm::rotate(model, static_cast<float>(glfwGetTime() * i / 2), glm::vec3(0.0f, 1.0f, 0.0f));
-			// model = glm::scale(model, glm::vec3(0.6f));
-			glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-			textures[i % 4]->use();
-			materials[i % 2]->use(uniform_specular_intensity, uniform_shininess);
-			meshes[i]->render();
-		}
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+		// model = glm::rotate(model, static_cast<float>(glfwGetTime() * i / 2), glm::vec3(0.0f, 1.0f, 0.0f));
+		// model = glm::scale(model, glm::vec3(0.6f));
+		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+		metal.use();
+		shiny_mat.use(uniform_specular_intensity, uniform_shininess);
+		meshes[0]->render();
+
+		// gound / end of list
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+		tiles.use();
+		// rougher_mat.use(uniform_specular_intensity, uniform_shininess);
+		meshes[1]->render();
 
 		shaders[0]->unuse();
 

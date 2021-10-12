@@ -111,9 +111,9 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 	_uniform_model = glGetUniformLocation(_program_id, "model");
 	_uniform_projection = glGetUniformLocation(_program_id, "projection");
 	_uniform_view = glGetUniformLocation(_program_id, "view");
-	_directional_light.uniform_color = glGetUniformLocation(_program_id, "directional_light.color");
-	_directional_light.uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.ambient_intensity");
-	_directional_light.uniform_diffuse_intensity = glGetUniformLocation(_program_id, "directional_light.diffuse_intensity");
+	_directional_light.uniform_color = glGetUniformLocation(_program_id, "directional_light.base.color");
+	_directional_light.uniform_ambient_intensity = glGetUniformLocation(_program_id, "directional_light.base.ambient_intensity");
+	_directional_light.uniform_diffuse_intensity = glGetUniformLocation(_program_id, "directional_light.base.diffuse_intensity");
 	_directional_light.uniform_direction = glGetUniformLocation(_program_id, "directional_light.direction");
 	_uniform_eye_position = glGetUniformLocation(_program_id, "eye_position");
 	_uniform_specular_intensity = glGetUniformLocation(_program_id, "material.specular_intensity");
@@ -146,6 +146,25 @@ void ShaderProgram::use_directional_light(const DirectionalLight &light)
 			_directional_light.uniform_color,
 			_directional_light.uniform_diffuse_intensity,
 			_directional_light.uniform_direction);
+}
+
+void ShaderProgram::use_point_lights(PointLight *lights, unsigned int length)
+{
+	if (length > MAX_POINT_LIGHTS)
+		throw "MAX_POINT_LIGHTS exceeded";
+
+	glUniform1i(_uniform_point_light_count, length);
+	for (size_t i = 0; i < length; i++)
+	{
+		lights[i].use(
+				_point_lights[i].uniform_ambient_intensity,
+				_point_lights[i].uniform_color,
+				_point_lights[i].uniform_diffuse_intensity,
+				_point_lights[i].uniform_position,
+				_point_lights[i].uniform_constant,
+				_point_lights[i].uniform_linear,
+				_point_lights[i].uniform_exponent);
+	}
 }
 
 void ShaderProgram::compile_shader(const char *shader_src, GLenum type)

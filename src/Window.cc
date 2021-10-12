@@ -19,6 +19,8 @@ Window::Window(GLint width, GLint height)
 	_width = width;
 	_last_x = _width / 2.0f;
 	_last_y = _height / 2.0f;
+	_change_in_x = 0.0f;
+	_change_in_y = 0.0f;
 	memset(_keys, 0, 1024);
 }
 

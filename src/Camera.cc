@@ -28,7 +28,6 @@ void Camera::mouse_control(GLfloat x_change, GLfloat y_change)
 
 	update();
 }
-
 void Camera::update()
 {
 	_front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
