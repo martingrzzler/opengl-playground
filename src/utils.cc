@@ -1,4 +1,6 @@
 #include "utils.h"
+#include <exception>
+#include <fmt/core.h>
 #include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -11,7 +13,7 @@ namespace utils
 	{
 		std::ifstream stream(path);
 		if (!stream.is_open())
-			throw "ERROR: file not found";
+			throw std::runtime_error(fmt::format("ERROR: file not found: {}", path));
 
 		std::stringstream buf;
 		buf << stream.rdbuf();

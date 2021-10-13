@@ -11,7 +11,9 @@
 		"ostream": "cpp",
 		"vector": "cpp",
 		"xlocnum": "cpp",
-		"fstream": "cpp"
+		"fstream": "cpp",
+		"string": "cpp",
+		"stdexcept": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

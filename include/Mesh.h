@@ -12,7 +12,6 @@ public:
 	void clear();
 
 	~Mesh();
-	///
 
 private:
 	GLuint VAO, VBO, IBO;

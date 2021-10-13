@@ -49,6 +49,10 @@ glm::vec3 Camera::position()
 	return _position;
 }
 
+glm::vec3 Camera::direction()
+{
+	return _front;
+}
 void Camera::key_control(bool *keys, GLfloat delta)
 {
 	GLfloat speed = _movement_speed * delta;

@@ -66,6 +66,6 @@ DirectionalLightBuilder &DirectionalLightBuilder::diffuse_intensity(GLfloat diff
 
 DirectionalLightBuilder &DirectionalLightBuilder::direction(GLfloat x, GLfloat y, GLfloat z)
 {
-	_light._direction = glm::vec3(x, y, z);
+	_light._direction = glm::normalize(glm::vec3(x, y, z));
 	return *this;
 }

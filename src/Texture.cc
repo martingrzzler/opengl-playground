@@ -1,4 +1,6 @@
 #include "Texture.h"
+#include <exception>
+#include <fmt/core.h>
 #include <iostream>
 #include <sstream>
 #define STB_IMAGE_IMPLEMENTATION
@@ -19,7 +21,7 @@ void Texture::load()
 	auto tex_data = stbi_load(_file_path, &_width, &_height, &_bit_depth, STBI_rgb_alpha);
 	if (!tex_data)
 	{
-		throw "ERROR could not open file";
+		throw std::runtime_error(fmt::format("ERROR could not open file: {}", _file_path));
 	}
 
 	glGenTextures(1, &_id);

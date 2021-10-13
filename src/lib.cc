@@ -17,6 +17,7 @@
 #include "Mesh.h"
 #include "PointLight.h"
 #include "ShaderProgram.h"
+#include "SpotLight.h"
 #include "Texture.h"
 #include "Window.h"
 #include "utils.h"
@@ -34,10 +35,10 @@ void create_meshes(std::vector<std::unique_ptr<Mesh>> &meshes)
 			0, 2, 1,
 			1, 2, 3};
 	GLfloat ground_vertices[] = {
-			-10.0f, 0.0f, -10.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, // top left 0
-			10.0f, 0.0f, -10.0f, 10.0f, 10.0f, 0.0f, 0.0f, 0.0f, // top right 1
-			-10.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,	 // bottom left 2
-			10.0f, 0.0f, 10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f};	 // bottom right 3
+			-100.0f, 0.0f, -100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f,	 // top left 0
+			100.0f, 0.0f, -100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, // top right 1
+			-100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,		 // bottom left 2
+			100.0f, 0.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f};	 // bottom right 3
 
 	unsigned int indices[] = {
 			0, 3, 1,
@@ -94,8 +95,8 @@ void run()
 	DirectionalLight directional_light = DirectionalLight::builder()
 																					 .direction(0.0f, 1.0f, 0.0f)
 																					 .color(1.0f, 1.0f, 1.0f)
-																					 .diffuse_intensity(1.0f)
-																					 .ambient_intensity(0.0f);
+																					 .diffuse_intensity(0.7f)
+																					 .ambient_intensity(0.1f);
 	PointLight point_lights[MAX_POINT_LIGHTS];
 	unsigned int point_light_count = 3;
 	point_lights[0] = PointLight::builder()
@@ -116,6 +117,25 @@ void run()
 												.ambient_intensity(0.1f)
 												.diffuse_intensity(1.0f)
 												.attenuation(0.3f, 0.2f, 0.1f);
+
+	SpotLight spot_lights[MAX_SPOT_LIGHTS];
+	unsigned int spot_light_count = 2;
+	spot_lights[0] = SpotLight::builder()
+											 .position(-8.0f, 2.0f, 0.0f)
+											 .color(1.0f, 1.0f, 1.0f)
+											 .ambient_intensity(0.1f)
+											 .diffuse_intensity(1.0f)
+											 .attenuation(0.2f, 0.1f, 0.05f)
+											 .edge(20.0f)
+											 .direction(0.0f, -1.0f, 0.0f);
+	spot_lights[1] = SpotLight::builder()
+											 .position(8.0f, 2.0f, 0.0f)
+											 .color(1.0f, 1.0f, 1.0f)
+											 .ambient_intensity(0.1f)
+											 .diffuse_intensity(1.0f)
+											 .attenuation(1.0f, 0.0f, 0.0f)
+											 .edge(20.0f)
+											 .direction(100.0f, 0.0f, 0.0f);
 
 	Texture tiles = Texture("../../assets/tiles.png");
 	Texture rust = Texture("../../assets/rust.jpg");
@@ -141,7 +161,7 @@ void run()
 	float scale = 1.0f;
 	bool grow = false;
 	glm::mat4 projection(1.0f);
-	projection = glm::perspective(glm::radians(45.0f), (GLfloat)window.buffer_width() / window.buffer_height(), 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(45.0f), (GLfloat)window.buffer_width() / window.buffer_height(), 0.1f, 200.0f);
 
 	while (!window.should_close())
 	{
@@ -160,6 +180,7 @@ void run()
 		shaders[0]->use();
 		shaders[0]->use_directional_light(directional_light);
 		shaders[0]->use_point_lights(point_lights, point_light_count);
+		shaders[0]->use_spot_lights(spot_lights, spot_light_count);
 		glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.view_matrix()));
 		glm::vec3 cam_pos = camera.position();
@@ -168,7 +189,6 @@ void run()
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
 		// model = glm::rotate(model, static_cast<float>(glfwGetTime() * i / 2), glm::vec3(0.0f, 1.0f, 0.0f));
-		// model = glm::scale(model, glm::vec3(0.6f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 		metal.use();
 		shiny_mat.use(uniform_specular_intensity, uniform_shininess);
@@ -177,6 +197,7 @@ void run()
 		// gound / end of list
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+		// model = glm::scale(model, glm::vec3(10.0f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 		tiles.use();
 		// rougher_mat.use(uniform_specular_intensity, uniform_shininess);

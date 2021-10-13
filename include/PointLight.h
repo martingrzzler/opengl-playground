@@ -21,7 +21,7 @@ public:
 	friend class PointLightBuilder;
 	static PointLightBuilder builder();
 
-private:
+protected:
 	glm::vec3 _position;
 	GLfloat _constant, _linear, _exponent;
 };

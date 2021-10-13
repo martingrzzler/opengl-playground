@@ -4,6 +4,7 @@ glew/2.2.0
 glm/0.9.9.8
 stb/cci.20210713
 fmt/8.0.1
+assimp/5.0.1
 [generators]
 cmake
 [imports]

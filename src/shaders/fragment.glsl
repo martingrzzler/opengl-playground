@@ -7,6 +7,7 @@ in vec3 normal;
 in vec3 frag_pos;
 
 const int MAX_POINT_LIGHTS = 3;
+const int MAX_SPOT_LIGHTS = 3;
 
 
 struct Light
@@ -31,6 +32,13 @@ struct PointLight
 	float exponent;
 };
 
+struct SpotLight
+{
+	PointLight base;
+	vec3 direction;
+	float edge;
+};
+
 struct Material
 {
 	float specular_intensity;
@@ -40,6 +48,8 @@ struct Material
 uniform DirectionalLight directional_light;
 uniform int point_light_count;
 uniform PointLight point_lights[MAX_POINT_LIGHTS];
+uniform int spot_light_count;
+uniform SpotLight spot_lights[MAX_SPOT_LIGHTS];
 
 uniform sampler2D texture_zero;
 uniform Material material;
@@ -73,19 +83,50 @@ vec4 calc_directional_light()
 	return calc_light_by_direction(directional_light.base, directional_light.direction);
 }
 
+vec4 calc_point_light(PointLight point_light)
+{
+	vec3 direction =  point_light.position - frag_pos;
+	float dist = length(direction);
+	direction = normalize(direction);
+
+	vec4 color = calc_light_by_direction(point_light.base, direction);
+	// ax^2+bx+c
+	float attenuation = point_light.exponent * dist * dist + point_light.linear * dist + point_light.constant; 
+	return (color / attenuation);
+}
+
+vec4 calc_spot_light(SpotLight spot_light)
+{
+	vec4 color = vec4(0,0,0,0);
+	vec3 direction_to_light = normalize(spot_light.base.position - frag_pos);
+	float theta = dot(direction_to_light, -spot_light.direction);
+	// the greater the cos(theta) the smaller the angle
+	if (theta > spot_light.edge) 
+	{
+		// attenuate with min - max - normilization
+		color = calc_point_light(spot_light.base) * ((theta - spot_light.edge)/(1 - spot_light.edge));
+	}
+
+	return color;
+}
+
+vec4 calc_spot_lights()
+{
+	vec4 total_color = vec4(0,0,0,0);
+	for (int i = 0; i < spot_light_count; i++)
+	{
+		total_color += calc_spot_light(spot_lights[i]);
+	}
+
+	return total_color;
+}
+
 vec4 calc_point_lights()
 {
 	vec4 total_color = vec4(0,0,0,0);
 	for (int i = 0; i < point_light_count; i++)
 	{
-		vec3 direction =  point_lights[i].position - frag_pos;
-		float dist = length(direction);
-		direction = normalize(direction);
-
-		vec4 color = calc_light_by_direction(point_lights[i].base, direction);
-		// ax^2+bx+c
-		float attenuation = point_lights[i].exponent * dist * dist + point_lights[i].linear * dist + point_lights[i].constant; 
-		total_color += (color / attenuation);
+		total_color += calc_point_light(point_lights[i]);
 	}
 
 	return total_color;
@@ -94,7 +135,7 @@ vec4 calc_point_lights()
 void main()
 {
 
-	vec4 light_color = calc_directional_light();
+	vec4 light_color = calc_directional_light() + calc_point_lights() + calc_spot_lights();
 
 	color = texture(texture_zero, tex_coord) * light_color;
 }

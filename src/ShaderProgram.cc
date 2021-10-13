@@ -1,12 +1,14 @@
 #include "ShaderProgram.h"
 #include "utils.h"
+#include <exception>
 #include <fmt/core.h>
 #include <iostream>
 
 ShaderProgram::ShaderProgram()
 {
-	_program_id = _uniform_model = _uniform_projection = _uniform_view = _uniform_point_light_count = 0;
+	_program_id = _uniform_model = _uniform_projection = _uniform_view = _uniform_point_light_count = _uniform_spot_light_count = 0;
 	_point_light_count = 0;
+	_spot_light_count = 0;
 }
 
 GLuint ShaderProgram::model_location()
@@ -65,17 +67,9 @@ void ShaderProgram::create_from_string(const char *v_shader_src, const char *f_s
 
 void ShaderProgram::create_from_file(const char *v_shader_path, const char *f_shader_path)
 {
-	try
-	{
-		auto v_shader_src = utils::read_file_to_string(v_shader_path);
-		auto f_shader_src = utils::read_file_to_string(f_shader_path);
-		build(v_shader_src.c_str(), f_shader_src.c_str());
-	}
-	catch (const char *e)
-	{
-		std::cerr << e << '\n';
-		throw e;
-	}
+	auto v_shader_src = utils::read_file_to_string(v_shader_path);
+	auto f_shader_src = utils::read_file_to_string(f_shader_path);
+	build(v_shader_src.c_str(), f_shader_src.c_str());
 }
 
 void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
@@ -137,6 +131,29 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 		buf = fmt::format("point_lights[{}].exponent", i);
 		_point_lights[i].uniform_exponent = glGetUniformLocation(_program_id, buf.c_str());
 	}
+
+	_uniform_spot_light_count = glGetUniformLocation(_program_id, "spot_light_count");
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+	{
+		std::string buf = fmt::format("spot_lights[{}].base.base.color", i);
+		_spot_lights[i].uniform_color = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].base.base.ambient_intensity", i);
+		_spot_lights[i].uniform_ambient_intensity = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].base.base.diffuse_intensity", i);
+		_spot_lights[i].uniform_diffuse_intensity = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].base.position", i);
+		_spot_lights[i].uniform_position = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].base.constant", i);
+		_spot_lights[i].uniform_constant = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].base.linear", i);
+		_spot_lights[i].uniform_linear = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].base.exponent", i);
+		_spot_lights[i].uniform_exponent = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].direction", i);
+		_spot_lights[i].uniform_direction = glGetUniformLocation(_program_id, buf.c_str());
+		buf = fmt::format("spot_lights[{}].edge", i);
+		_spot_lights[i].uniform_edge = glGetUniformLocation(_program_id, buf.c_str());
+	}
 }
 
 void ShaderProgram::use_directional_light(const DirectionalLight &light)
@@ -151,7 +168,7 @@ void ShaderProgram::use_directional_light(const DirectionalLight &light)
 void ShaderProgram::use_point_lights(PointLight *lights, unsigned int length)
 {
 	if (length > MAX_POINT_LIGHTS)
-		throw "MAX_POINT_LIGHTS exceeded";
+		throw std::runtime_error("MAX_POINT_LIGHTS exceeded");
 
 	glUniform1i(_uniform_point_light_count, length);
 	for (size_t i = 0; i < length; i++)
@@ -164,6 +181,27 @@ void ShaderProgram::use_point_lights(PointLight *lights, unsigned int length)
 				_point_lights[i].uniform_constant,
 				_point_lights[i].uniform_linear,
 				_point_lights[i].uniform_exponent);
+	}
+}
+
+void ShaderProgram::use_spot_lights(SpotLight *lights, unsigned int length)
+{
+	if (length > MAX_SPOT_LIGHTS)
+		throw std::runtime_error("MAX_SPOT_LIGHTS exceeded");
+
+	glUniform1i(_uniform_spot_light_count, length);
+	for (size_t i = 0; i < length; i++)
+	{
+		lights[i].use(
+				_spot_lights[i].uniform_ambient_intensity,
+				_spot_lights[i].uniform_color,
+				_spot_lights[i].uniform_diffuse_intensity,
+				_spot_lights[i].uniform_position,
+				_spot_lights[i].uniform_constant,
+				_spot_lights[i].uniform_linear,
+				_spot_lights[i].uniform_exponent,
+				_spot_lights[i].uniform_direction,
+				_spot_lights[i].uniform_edge);
 	}
 }
 

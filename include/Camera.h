@@ -12,6 +12,7 @@ public:
 	void mouse_control(GLfloat x_change, GLfloat y_change);
 	glm::mat4 view_matrix();
 	glm::vec3 position();
+	glm::vec3 direction();
 	~Camera();
 
 private:
