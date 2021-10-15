@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <cstdlib>
 #include <ctime>
+#include <exception>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,6 +16,7 @@
 #include "DirectionalLight.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "Model.h"
 #include "PointLight.h"
 #include "ShaderProgram.h"
 #include "SpotLight.h"
@@ -22,40 +24,39 @@
 #include "Window.h"
 #include "utils.h"
 
-void create_meshes(std::vector<std::unique_ptr<Mesh>> &meshes)
-{
-	GLfloat vertices[] = {
-			//x      y       z    s     t    normal
-			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left 0
-			0.0f, 0.0f, -2.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f,	// in 1
-			1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,	// right 2
-			0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f};	// up 3
+// void create_meshes(std::vector<std::unique_ptr<Mesh>> &meshes)
+// {
+// 	GLfloat vertices[] = {
+// 			//x      y       z    s     t    normal
+// 			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left 0
+// 			0.0f, 0.0f, -2.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f,	// in 1
+// 			1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,	// right 2
+// 			0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f};	// up 3
 
-	unsigned int ground_indices[] = {
-			0, 2, 1,
-			1, 2, 3};
-	GLfloat ground_vertices[] = {
-			-100.0f, 0.0f, -100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f,	 // top left 0
-			100.0f, 0.0f, -100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, // top right 1
-			-100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,		 // bottom left 2
-			100.0f, 0.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f};	 // bottom right 3
+// 	unsigned int ground_indices[] = {
+// 			0, 2, 1,
+// 			1, 2, 3};
+// 	GLfloat ground_vertices[] = {
+// 			-100.0f, 0.0f, -100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f,	 // top left 0
+// 			100.0f, 0.0f, -100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, // top right 1
+// 			-100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,		 // bottom left 2
+// 			100.0f, 0.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f};	 // bottom right 3
 
-	unsigned int indices[] = {
-			0, 3, 1,
-			3, 2, 1,
-			0, 2, 1,
-			0, 2, 3};
-	utils::calc_avg_normals(indices, 12, vertices, 32, 8, 5);
+// 	unsigned int indices[] = {
+// 			0, 3, 1,
+// 			3, 2, 1,
+// 			0, 2, 1,
+// 			0, 2, 3};
+// 	utils::calc_avg_normals(indices, 12, vertices, 32, 8, 5);
 
-	auto triangle = std::make_unique<Mesh>();
-	triangle->create(vertices, indices, 32, 12);
-	meshes.push_back(std::move(triangle));
+// 	auto triangle = std::make_unique<Mesh>();
+// 	triangle->create(vertices, indices, 32, 12);
+// 	meshes.push_back(std::move(triangle));
 
-	auto ground = std::make_unique<Mesh>();
-	utils::calc_avg_normals(ground_indices, 6, ground_vertices, 32, 8, 5);
-	ground->create(ground_vertices, ground_indices, 32, 6);
-	meshes.push_back(std::move(ground));
-}
+// 	auto ground = std::make_unique<Mesh>();
+// 	utils::calc_avg_normals(ground_indices, 6, ground_vertices, 32, 8, 5);
+// 	meshes.push_back(std::move(ground));
+// }
 
 void create_shaders(std::vector<std::unique_ptr<ShaderProgram>> &shaders)
 {
@@ -74,23 +75,36 @@ void run()
 			0.0f,
 			10.0f,
 			0.1f);
-	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::vector<std::unique_ptr<ShaderProgram>> shaders;
 
 	float delta = 0.0f;
 	float lastFrame = 0.0f;
 	int res = window.init();
 	if (res != 0)
-		return;
+		throw std::runtime_error("Initilization of Window failed");
 	std::srand((int)time(0));
 
-	create_meshes(meshes);
 	create_shaders(shaders);
+	Texture tiles = Texture("../../assets", "tiles.png", TextureMaterial::DIFFUSE);
 
-	GLuint uniform_model = 0, uniform_projection = 0;
+	std::vector<Vertex> vertices = {
+			Vertex{glm::vec3(-100.0f, 0.0f, -100.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 100.0f)},
+			Vertex{glm::vec3(100.0f, 0.0f, -100.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(100.0f, 100.0f)},
+			Vertex{glm::vec3(-100.0f, 0.0f, 100.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+			Vertex{glm::vec3(100.0f, 0.0f, 100.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(100.0f, 0.0f)},
+	};
+	std::vector<unsigned int> indices = {
+			0, 3, 1,
+			3, 2, 1,
+			0, 2, 1,
+			0, 2, 3};
+
+	Mesh ground = Mesh(vertices, indices, {std::move(tiles)});
+
+	GLuint uniform_model = 0,
+				 uniform_projection = 0;
 	GLuint uniform_view = 0,
-				 uniform_eye_position = 0,
-				 uniform_specular_intensity = 0, uniform_shininess = 0;
+				 uniform_eye_position = 0;
 
 	DirectionalLight directional_light = DirectionalLight::builder()
 																					 .direction(0.0f, 1.0f, 0.0f)
@@ -137,25 +151,15 @@ void run()
 											 .edge(20.0f)
 											 .direction(100.0f, 0.0f, 0.0f);
 
-	Texture tiles = Texture("../../assets/tiles.png");
-	Texture rust = Texture("../../assets/rust.jpg");
-	Texture bunt = Texture("../../assets/bunt.jpg");
-	Texture metal = Texture("../../assets/metal.jpg");
-	Texture *textures[] = {&tiles, &rust, &bunt, &metal};
-	tiles.load();
-	rust.load();
-	bunt.load();
-	metal.load();
-
 	Material shiny_mat = Material(1.0f, 128);
 	Material rougher_mat = Material(0.3f, 4);
-	Material *materials[] = {&shiny_mat, &rougher_mat};
+
+	Model backpack = Model("../../assets/models/eye/eyeball.obj");
+	Model plane = Model("../../assets/models/airplane/11805_airplane_v2_L2.obj");
 
 	uniform_model = shaders[0]->model_location();
 	uniform_projection = shaders[0]->projection_location();
 	uniform_view = shaders[0]->view_location();
-	uniform_specular_intensity = shaders[0]->specular_intensity_location();
-	uniform_shininess = shaders[0]->shininess_location();
 	uniform_eye_position = shaders[0]->eye_position_location();
 
 	float scale = 1.0f;
@@ -187,21 +191,25 @@ void run()
 		glUniform3f(uniform_eye_position, cam_pos.x, cam_pos.y, cam_pos.z);
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
-		// model = glm::rotate(model, static_cast<float>(glfwGetTime() * i / 2), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-3.0f, 5.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(3.0f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-		metal.use();
-		shiny_mat.use(uniform_specular_intensity, uniform_shininess);
-		meshes[0]->render();
+		shaders[0]->use_material(shiny_mat);
+		backpack.draw(shaders[0].get());
 
-		// gound / end of list
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		// model = glm::scale(model, glm::vec3(10.0f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-		tiles.use();
-		// rougher_mat.use(uniform_specular_intensity, uniform_shininess);
-		meshes[1]->render();
+		shaders[0]->use_material(shiny_mat);
+		ground.draw(shaders[0].get());
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(8.0f, 4.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.01f));
+		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+		shaders[0]->use_material(shiny_mat);
+		plane.draw(shaders[0].get());
 
 		shaders[0]->unuse();
 

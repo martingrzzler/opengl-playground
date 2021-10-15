@@ -1,22 +1,34 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <string>
+
+enum TextureMaterial
+{
+	DIFFUSE,
+	SPECULAR,
+};
 
 class Texture
 {
 public:
-	Texture();
-	Texture(const char *file_path);
+	Texture(std::string directory, std::string file_name, TextureMaterial type);
 
-	void load();
+	TextureMaterial type();
+	std::string file_name();
+
 	void use();
 
 	~Texture();
-	GLuint _id;
+
+	static std::string texture_type_to_string(TextureMaterial type);
 
 private:
-	int _width, _height, _bit_depth;
-	const char *_file_path;
+	void _load();
+	std::string _file_name;
+	std::string _directory;
+	GLuint _id;
+	TextureMaterial _type;
 
 	void clear();
 	void bind();

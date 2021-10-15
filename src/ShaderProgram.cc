@@ -11,6 +11,11 @@ ShaderProgram::ShaderProgram()
 	_spot_light_count = 0;
 }
 
+void ShaderProgram::use_material(Material &mat)
+{
+	mat.use(_uniform_specular_intensity, _uniform_shininess);
+}
+
 GLuint ShaderProgram::model_location()
 {
 	return _uniform_model;
@@ -21,28 +26,9 @@ GLuint ShaderProgram::projection_location()
 	return _uniform_projection;
 }
 
-GLuint ShaderProgram::specular_intensity_location()
-{
-	return _uniform_specular_intensity;
-}
-GLuint ShaderProgram::shininess_location()
-{
-	return _uniform_shininess;
-}
-
 GLuint ShaderProgram::eye_position_location()
 {
 	return _uniform_eye_position;
-}
-
-GLuint ShaderProgram::diffuse_intensity_location()
-{
-	return _directional_light.uniform_diffuse_intensity;
-}
-
-GLuint ShaderProgram::direction_location()
-{
-	return _directional_light.uniform_direction;
 }
 
 GLuint ShaderProgram::view_location()
@@ -50,14 +36,16 @@ GLuint ShaderProgram::view_location()
 	return _uniform_view;
 }
 
-GLuint ShaderProgram::color_location()
+void ShaderProgram::use_float(std::string uniform, float value)
 {
-	return _directional_light.uniform_color;
+	auto loc = glGetUniformLocation(_program_id, uniform.c_str());
+	glUniform1f(loc, value);
 }
 
-GLuint ShaderProgram::ambient_intensity_location()
+void ShaderProgram::use_int(std::string uniform, int value)
 {
-	return _directional_light.uniform_ambient_intensity;
+	auto loc = glGetUniformLocation(_program_id, uniform.c_str());
+	glUniform1i(loc, value);
 }
 
 void ShaderProgram::create_from_string(const char *v_shader_src, const char *f_shader_src)
@@ -77,8 +65,7 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 	_program_id = glCreateProgram();
 	if (!_program_id)
 	{
-		std::cerr << "ERROR: failed to create shader program" << std::endl;
-		return;
+		throw std::runtime_error("ERROR: failed to create shader program");
 	}
 
 	compile_shader(v_shader_src, GL_VERTEX_SHADER);
@@ -91,16 +78,14 @@ void ShaderProgram::build(const char *v_shader_src, const char *f_shader_src)
 	if (res == GL_FALSE)
 	{
 		glGetProgramInfoLog(_program_id, sizeof(msg), NULL, msg);
-		std::cerr << "ERROR: Linking shaders - " << msg << std::endl;
-		return;
+		throw std::runtime_error(fmt::format("ERROR: Linking shaders: {}", msg));
 	}
 	glValidateProgram(_program_id);
 	glGetProgramiv(_program_id, GL_VALIDATE_STATUS, &res);
 	if (res == GL_FALSE)
 	{
 		glGetProgramInfoLog(_program_id, sizeof(msg), NULL, msg);
-		std::cerr << "ERROR: Validating shaders - " << msg << std::endl;
-		return;
+		throw std::runtime_error(fmt::format("ERROR: Validating shaders: {}", msg));
 	}
 	_uniform_model = glGetUniformLocation(_program_id, "model");
 	_uniform_projection = glGetUniformLocation(_program_id, "projection");

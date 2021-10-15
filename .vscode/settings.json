@@ -13,7 +13,9 @@
 		"xlocnum": "cpp",
 		"fstream": "cpp",
 		"string": "cpp",
-		"stdexcept": "cpp"
+		"stdexcept": "cpp",
+		"xstring": "cpp",
+		"xutility": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

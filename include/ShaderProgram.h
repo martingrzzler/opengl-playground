@@ -1,10 +1,11 @@
 #pragma once
 
-#include <GL/glew.h>
-
 #include "DirectionalLight.h"
+#include "Material.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include <GL/glew.h>
+#include <string>
 
 static const int MAX_POINT_LIGHTS = 3;
 static const int MAX_SPOT_LIGHTS = 3;
@@ -18,17 +19,14 @@ public:
 	GLuint projection_location();
 	GLuint model_location();
 	GLuint view_location();
-	GLuint ambient_intensity_location();
-	GLuint color_location();
-	GLuint diffuse_intensity_location();
-	GLuint direction_location();
-	GLuint shininess_location();
-	GLuint specular_intensity_location();
 	GLuint eye_position_location();
 
 	void use_directional_light(const DirectionalLight &light);
 	void use_point_lights(PointLight *lights, unsigned int length);
 	void use_spot_lights(SpotLight *lights, unsigned int length);
+	void use_material(Material &mat);
+	void use_float(std::string uniform, float value);
+	void use_int(std::string uniform, int value);
 
 	void use();
 	void unuse();

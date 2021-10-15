@@ -51,7 +51,7 @@ uniform PointLight point_lights[MAX_POINT_LIGHTS];
 uniform int spot_light_count;
 uniform SpotLight spot_lights[MAX_SPOT_LIGHTS];
 
-uniform sampler2D texture_zero;
+uniform sampler2D texture_diffuse1;
 uniform Material material;
 
 uniform vec3 eye_position;
@@ -137,5 +137,5 @@ void main()
 
 	vec4 light_color = calc_directional_light() + calc_point_lights() + calc_spot_lights();
 
-	color = texture(texture_zero, tex_coord) * light_color;
+	color = texture(texture_diffuse1, tex_coord) * light_color;
 }

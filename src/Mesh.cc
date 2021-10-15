@@ -1,70 +1,97 @@
 #include "Mesh.h"
+#include <exception>
+#include <fmt/core.h>
 #include <iostream>
 
-Mesh::Mesh()
+Mesh::Mesh(
+		std::vector<Vertex> vertices,
+		std::vector<unsigned int> indices,
+		std::vector<Texture> textures) : _vertices(vertices), _indices(indices), _textures(textures)
 {
-	VAO = VBO = IBO = index_count = 0;
+	create();
 }
 
-void Mesh::create(GLfloat *vertices, unsigned int *indices, unsigned int num_of_vertices, unsigned int num_of_indices)
+void Mesh::draw(ShaderProgram *shader)
 {
-	index_count = num_of_indices;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	unsigned int diffuse_nr = 1;
+	unsigned int specular_nr = 1;
 
-	glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * num_of_indices, indices, GL_STATIC_DRAW);
+	for (unsigned int i = 0; i < _textures.size(); i++)
+	{
+		unsigned int num = 0;
+		glActiveTexture(GL_TEXTURE0 + i);
+		auto type = _textures[i].type();
+		switch (type)
+		{
+		case TextureMaterial::DIFFUSE:
+			num = diffuse_nr++;
+			break;
+		case TextureMaterial::SPECULAR:
+			num = specular_nr++;
+			break;
+		default:
+			std::cout << fmt::format("Unsupported TextureMaterial: {}", Texture::texture_type_to_string(type)) << std::endl;
+			break;
+		}
+		// e.g. texture_diffuse1
+		shader->use_int(fmt::format("{}{}", Texture::texture_type_to_string(type), num), i);
+		_textures[i].use();
+	}
 
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(sizeof(vertices[0])) * num_of_vertices, vertices, GL_STATIC_DRAW);
-
-	// enable vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, 0);
-	glEnableVertexAttribArray(0);
-	// enable textures
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void *)(sizeof(vertices[0]) * 3));
-	glEnableVertexAttribArray(1);
-	//enable normals
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void *)(sizeof(vertices[0]) * 5));
-	glEnableVertexAttribArray(2);
-
+	bind();
+	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
 	unbind();
 }
 
-void Mesh::render()
+void Mesh::create()
 {
-	bind();
-	glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0);
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
+	glGenBuffers(1, &_ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * _indices.size(), &_indices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * _vertices.size(), &_vertices[0], GL_STATIC_DRAW);
+
+	// enable vertices
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glEnableVertexAttribArray(0);
+	//enable normals
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
+	glEnableVertexAttribArray(2);
+	// enable textures coords
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, tex_cords));
+	glEnableVertexAttribArray(1);
+
 	unbind();
 }
 
 void Mesh::bind()
 {
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindVertexArray(_vao);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 }
 
 void Mesh::clear()
 {
-	if (IBO != 0)
-	{
-		glDeleteBuffers(1, &IBO);
-		IBO = 0;
-	}
-	if (VBO != 0)
-	{
-		glDeleteBuffers(1, &VBO);
-		VBO = 0;
-	}
-	if (VAO != 0)
-	{
-		glDeleteVertexArrays(1, &VAO);
-		VAO = 0;
-	}
-	index_count = 0;
+	// if (_ebo != 0)
+	// {
+	// 	glDeleteBuffers(1, &_ebo);
+	// 	_ebo = 0;
+	// }
+	// if (_vbo != 0)
+	// {
+	// 	glDeleteBuffers(1, &_vbo);
+	// 	_vbo = 0;
+	// }
+	// if (_vao != 0)
+	// {
+	// 	glDeleteVertexArrays(1, &_vao);
+	// 	_vao = 0;
+	// }
 }
 
 void Mesh::unbind()
