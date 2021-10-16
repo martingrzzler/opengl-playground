@@ -1,5 +1,6 @@
 #include "Model.h"
 #include <exception>
+#include <filesystem>
 #include <fmt/core.h>
 #include <iostream>
 
@@ -24,11 +25,16 @@ std::vector<std::shared_ptr<Texture>> Model::_load_material_textures(aiMaterial 
 	{
 		aiString str;
 		mat->GetTexture(ai_type, i, &str);
+		auto path = std::filesystem::path(str.C_Str());
+		auto filename = path.is_absolute() ? path.filename().string() : path.string();
+
+		std::cout << filename << std::endl;
+
 		bool skip = false;
 
 		for (unsigned int j = 0; j < _textures_loaded.size(); i++)
 		{
-			if (std::strcmp(_textures_loaded[j]->file_name().data(), str.C_Str()) == 0)
+			if (std::strcmp(_textures_loaded[j]->file_name().data(), filename.data()) == 0)
 			{
 				textures.push_back(_textures_loaded[i]);
 				skip = true;
@@ -38,7 +44,7 @@ std::vector<std::shared_ptr<Texture>> Model::_load_material_textures(aiMaterial 
 
 		if (!skip)
 		{
-			auto texture = std::make_shared<Texture>(_directory, str.C_Str(), type);
+			auto texture = std::make_shared<Texture>(_directory, filename, type);
 			textures.push_back(texture);
 		}
 	}

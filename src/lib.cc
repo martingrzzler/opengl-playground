@@ -156,6 +156,7 @@ void run()
 
 	Model backpack = Model("../../assets/models/eye/eyeball.obj");
 	Model plane = Model("../../assets/models/airplane/11805_airplane_v2_L2.obj");
+	Model mountain = Model("../../assets/models/mountain/mount.blend1.obj");
 
 	uniform_model = shaders[0]->model_location();
 	uniform_projection = shaders[0]->projection_location();
@@ -210,6 +211,12 @@ void run()
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 		shaders[0]->use_material(shiny_mat);
 		plane.draw(shaders[0]);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
+		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+		shaders[0]->use_material(rougher_mat);
+		mountain.draw(shaders[0]);
 
 		shaders[0]->unuse();
 
