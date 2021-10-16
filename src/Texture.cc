@@ -14,6 +14,7 @@ Texture::Texture(std::string directory, std::string file_name, TextureMaterial t
 
 void Texture::_load()
 {
+	// or set it with assimp
 	stbi_set_flip_vertically_on_load(true);
 	int width, height, bit_depth;
 	auto file_path = fmt::format("{}/{}", _directory, _file_name);
@@ -38,10 +39,10 @@ void Texture::_load()
 
 void Texture::clear()
 {
-	// glDeleteTextures(1, &_id);
-	// _id = 0;
-	// _directory = "";
-	// _file_name = "";
+	glDeleteTextures(1, &_id);
+	_id = 0;
+	_directory = "";
+	_file_name = "";
 }
 
 std::string Texture::texture_type_to_string(TextureMaterial type)
@@ -52,6 +53,8 @@ std::string Texture::texture_type_to_string(TextureMaterial type)
 		return "texture_diffuse";
 	case TextureMaterial::SPECULAR:
 		return "texture_specular";
+	default:
+		throw std::runtime_error("Invalid TextureMaterial");
 	}
 }
 

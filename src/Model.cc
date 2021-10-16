@@ -8,17 +8,18 @@ Model::Model(const char *path)
 	_load_model(path);
 }
 
-void Model::draw(ShaderProgram *shader)
+void Model::draw(std::unique_ptr<ShaderProgram> &shader)
 {
-	for (Mesh &mesh : _meshes)
+	for (auto const &mesh : _meshes)
 	{
-		mesh.draw(shader);
+		mesh->draw(shader);
 	}
 }
 
-std::vector<Texture> Model::_load_material_textures(aiMaterial *mat, aiTextureType ai_type, TextureMaterial type)
+std::vector<std::shared_ptr<Texture>> Model::_load_material_textures(aiMaterial *mat, aiTextureType ai_type, TextureMaterial type)
 {
-	std::vector<Texture> textures;
+
+	std::vector<std::shared_ptr<Texture>> textures;
 	for (unsigned int i = 0; i < mat->GetTextureCount(ai_type); i++)
 	{
 		aiString str;
@@ -27,7 +28,7 @@ std::vector<Texture> Model::_load_material_textures(aiMaterial *mat, aiTextureTy
 
 		for (unsigned int j = 0; j < _textures_loaded.size(); i++)
 		{
-			if (std::strcmp(_textures_loaded[j].file_name().data(), str.C_Str()) == 0)
+			if (std::strcmp(_textures_loaded[j]->file_name().data(), str.C_Str()) == 0)
 			{
 				textures.push_back(_textures_loaded[i]);
 				skip = true;
@@ -37,7 +38,7 @@ std::vector<Texture> Model::_load_material_textures(aiMaterial *mat, aiTextureTy
 
 		if (!skip)
 		{
-			Texture texture(_directory, str.C_Str(), type);
+			auto texture = std::make_shared<Texture>(_directory, str.C_Str(), type);
 			textures.push_back(texture);
 		}
 	}
@@ -45,11 +46,11 @@ std::vector<Texture> Model::_load_material_textures(aiMaterial *mat, aiTextureTy
 	return textures;
 }
 
-Mesh Model::_process_mesh(aiMesh *mesh, const aiScene *scene)
+std::unique_ptr<Mesh> Model::_process_mesh(aiMesh *mesh, const aiScene *scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Texture> textures;
+	std::vector<std::shared_ptr<Texture>> textures;
 
 	// process vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -96,10 +97,10 @@ Mesh Model::_process_mesh(aiMesh *mesh, const aiScene *scene)
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<Texture> diffuse_maps = _load_material_textures(material, aiTextureType_DIFFUSE, TextureMaterial::DIFFUSE);
+		std::vector<std::shared_ptr<Texture>> diffuse_maps = _load_material_textures(material, aiTextureType_DIFFUSE, TextureMaterial::DIFFUSE);
 		textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-		std::vector<Texture> specular_maps = _load_material_textures(material, aiTextureType_SPECULAR, TextureMaterial::SPECULAR);
+		std::vector<std::shared_ptr<Texture>> specular_maps = _load_material_textures(material, aiTextureType_SPECULAR, TextureMaterial::SPECULAR);
 		textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 	}
 	else
@@ -107,7 +108,7 @@ Mesh Model::_process_mesh(aiMesh *mesh, const aiScene *scene)
 		throw std::runtime_error("Empty textures");
 	}
 
-	return Mesh(vertices, indices, textures);
+	return std::make_unique<Mesh>(vertices, indices, textures);
 }
 
 void Model::_process_node(aiNode *node, const aiScene *scene)

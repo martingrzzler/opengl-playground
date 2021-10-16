@@ -52,6 +52,9 @@ uniform int spot_light_count;
 uniform SpotLight spot_lights[MAX_SPOT_LIGHTS];
 
 uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_diffuse2;
+uniform sampler2D texture_specular1;
+uniform sampler2D texture_specular2;
 uniform Material material;
 
 uniform vec3 eye_position;

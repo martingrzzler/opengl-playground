@@ -85,7 +85,7 @@ void run()
 	std::srand((int)time(0));
 
 	create_shaders(shaders);
-	Texture tiles = Texture("../../assets", "tiles.png", TextureMaterial::DIFFUSE);
+	auto tiles = std::make_shared<Texture>("../../assets", "tiles.png", TextureMaterial::DIFFUSE);
 
 	std::vector<Vertex> vertices = {
 			Vertex{glm::vec3(-100.0f, 0.0f, -100.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 100.0f)},
@@ -99,7 +99,7 @@ void run()
 			0, 2, 1,
 			0, 2, 3};
 
-	Mesh ground = Mesh(vertices, indices, {std::move(tiles)});
+	auto ground = std::make_unique<Mesh>(vertices, indices, std::vector({tiles}));
 
 	GLuint uniform_model = 0,
 				 uniform_projection = 0;
@@ -195,13 +195,13 @@ void run()
 		model = glm::scale(model, glm::vec3(3.0f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 		shaders[0]->use_material(shiny_mat);
-		backpack.draw(shaders[0].get());
+		backpack.draw(shaders[0]);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 		shaders[0]->use_material(shiny_mat);
-		ground.draw(shaders[0].get());
+		ground->draw(shaders[0]);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(8.0f, 4.0f, 0.0f));
@@ -209,7 +209,7 @@ void run()
 		model = glm::scale(model, glm::vec3(0.01f));
 		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 		shaders[0]->use_material(shiny_mat);
-		plane.draw(shaders[0].get());
+		plane.draw(shaders[0]);
 
 		shaders[0]->unuse();
 

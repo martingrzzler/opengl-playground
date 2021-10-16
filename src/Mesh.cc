@@ -6,12 +6,12 @@
 Mesh::Mesh(
 		std::vector<Vertex> vertices,
 		std::vector<unsigned int> indices,
-		std::vector<Texture> textures) : _vertices(vertices), _indices(indices), _textures(textures)
+		std::vector<std::shared_ptr<Texture>> textures) : _vertices(vertices), _indices(indices), _textures(textures)
 {
 	create();
 }
 
-void Mesh::draw(ShaderProgram *shader)
+void Mesh::draw(std::unique_ptr<ShaderProgram> &shader)
 {
 	unsigned int diffuse_nr = 1;
 	unsigned int specular_nr = 1;
@@ -20,7 +20,7 @@ void Mesh::draw(ShaderProgram *shader)
 	{
 		unsigned int num = 0;
 		glActiveTexture(GL_TEXTURE0 + i);
-		auto type = _textures[i].type();
+		auto type = _textures[i]->type();
 		switch (type)
 		{
 		case TextureMaterial::DIFFUSE:
@@ -30,12 +30,12 @@ void Mesh::draw(ShaderProgram *shader)
 			num = specular_nr++;
 			break;
 		default:
-			std::cout << fmt::format("Unsupported TextureMaterial: {}", Texture::texture_type_to_string(type)) << std::endl;
+			std::cout << fmt::format("Unsupported TextureMaterial: {}", type) << std::endl;
 			break;
 		}
 		// e.g. texture_diffuse1
 		shader->use_int(fmt::format("{}{}", Texture::texture_type_to_string(type), num), i);
-		_textures[i].use();
+		_textures[i]->use();
 	}
 
 	bind();
@@ -77,21 +77,21 @@ void Mesh::bind()
 
 void Mesh::clear()
 {
-	// if (_ebo != 0)
-	// {
-	// 	glDeleteBuffers(1, &_ebo);
-	// 	_ebo = 0;
-	// }
-	// if (_vbo != 0)
-	// {
-	// 	glDeleteBuffers(1, &_vbo);
-	// 	_vbo = 0;
-	// }
-	// if (_vao != 0)
-	// {
-	// 	glDeleteVertexArrays(1, &_vao);
-	// 	_vao = 0;
-	// }
+	if (_ebo != 0)
+	{
+		glDeleteBuffers(1, &_ebo);
+		_ebo = 0;
+	}
+	if (_vbo != 0)
+	{
+		glDeleteBuffers(1, &_vbo);
+		_vbo = 0;
+	}
+	if (_vao != 0)
+	{
+		glDeleteVertexArrays(1, &_vao);
+		_vao = 0;
+	}
 }
 
 void Mesh::unbind()
