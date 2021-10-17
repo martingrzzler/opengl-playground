@@ -59,7 +59,7 @@ uniform Material material;
 
 uniform vec3 eye_position;
 
-vec4 calc_light_by_direction(Light light, vec3 direction)
+vec4 calc_light_by_direction(Light light, vec3 direction, bool blinn)
 {
 	vec4 ambient_color = vec4(light.color, 1.0) * light.ambient_intensity;
 	float diffuse_factor = max(dot(normalize(normal), normalize(direction)), 0.0);
@@ -68,14 +68,18 @@ vec4 calc_light_by_direction(Light light, vec3 direction)
 	vec4 specular_color = vec4(0,0,0,0);
 	if (diffuse_factor > 0.0)
 	{
+		float specular_factor = 0;
 		vec3 frag_to_eye = normalize(eye_position - frag_pos);
-		vec3 reflected_vec = normalize(reflect(-direction, normalize(normal)));
-		float specular_factor = dot(frag_to_eye, reflected_vec);
-		if (specular_factor > 0.0)
+
+		if (blinn)
 		{
-			specular_factor = pow(specular_factor, material.shininess);
-			specular_color = vec4(light.color * material.specular_intensity * specular_factor, 1.0);
+			vec3 halfway_dir = normalize(normalize(direction) + frag_to_eye);
+			specular_factor = pow(max(dot(normalize(normal), halfway_dir), 0.0), material.shininess);
+		} else {
+			vec3 reflected_vec = normalize(reflect(-direction, normalize(normal)));
+			specular_factor = pow(max(dot(frag_to_eye, reflected_vec), 0.0), material.shininess);
 		}
+		specular_color = vec4(light.color * material.specular_intensity * specular_factor, 1.0);
 	}
 
 	return (ambient_color + diffuse_color + specular_color);
@@ -83,7 +87,7 @@ vec4 calc_light_by_direction(Light light, vec3 direction)
 
 vec4 calc_directional_light()
 {
-	return calc_light_by_direction(directional_light.base, directional_light.direction);
+	return calc_light_by_direction(directional_light.base, directional_light.direction, true);
 }
 
 vec4 calc_point_light(PointLight point_light)
@@ -92,7 +96,7 @@ vec4 calc_point_light(PointLight point_light)
 	float dist = length(direction);
 	direction = normalize(direction);
 
-	vec4 color = calc_light_by_direction(point_light.base, direction);
+	vec4 color = calc_light_by_direction(point_light.base, direction, true);
 	// ax^2+bx+c
 	float attenuation = point_light.exponent * dist * dist + point_light.linear * dist + point_light.constant; 
 	return (color / attenuation);

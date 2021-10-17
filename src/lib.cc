@@ -24,40 +24,6 @@
 #include "Window.h"
 #include "utils.h"
 
-// void create_meshes(std::vector<std::unique_ptr<Mesh>> &meshes)
-// {
-// 	GLfloat vertices[] = {
-// 			//x      y       z    s     t    normal
-// 			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left 0
-// 			0.0f, 0.0f, -2.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f,	// in 1
-// 			1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,	// right 2
-// 			0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f};	// up 3
-
-// 	unsigned int ground_indices[] = {
-// 			0, 2, 1,
-// 			1, 2, 3};
-// 	GLfloat ground_vertices[] = {
-// 			-100.0f, 0.0f, -100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f,	 // top left 0
-// 			100.0f, 0.0f, -100.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, // top right 1
-// 			-100.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,		 // bottom left 2
-// 			100.0f, 0.0f, 100.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f};	 // bottom right 3
-
-// 	unsigned int indices[] = {
-// 			0, 3, 1,
-// 			3, 2, 1,
-// 			0, 2, 1,
-// 			0, 2, 3};
-// 	utils::calc_avg_normals(indices, 12, vertices, 32, 8, 5);
-
-// 	auto triangle = std::make_unique<Mesh>();
-// 	triangle->create(vertices, indices, 32, 12);
-// 	meshes.push_back(std::move(triangle));
-
-// 	auto ground = std::make_unique<Mesh>();
-// 	utils::calc_avg_normals(ground_indices, 6, ground_vertices, 32, 8, 5);
-// 	meshes.push_back(std::move(ground));
-// }
-
 void create_shaders(std::vector<std::unique_ptr<ShaderProgram>> &shaders)
 {
 	auto basic_shader = std::make_unique<ShaderProgram>();
@@ -156,7 +122,8 @@ void run()
 
 	Model backpack = Model("../../assets/models/eye/eyeball.obj");
 	Model plane = Model("../../assets/models/airplane/11805_airplane_v2_L2.obj");
-	Model mountain = Model("../../assets/models/mountain/mount.blend1.obj");
+	// Model mountain = Model("../../assets/models/mountain/mount.blend1.obj");
+	// Model landscape = Model("../../assets/models/landscape/landscape.blend");
 
 	uniform_model = shaders[0]->model_location();
 	uniform_projection = shaders[0]->projection_location();
@@ -212,11 +179,17 @@ void run()
 		shaders[0]->use_material(shiny_mat);
 		plane.draw(shaders[0]);
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
-		glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-		shaders[0]->use_material(rougher_mat);
-		mountain.draw(shaders[0]);
+		// model = glm::mat4(1.0f);
+		// model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
+		// glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+		// shaders[0]->use_material(rougher_mat);
+		// mountain.draw(shaders[0]);
+
+		// model = glm::mat4(1.0f);
+		// model = glm::translate(model, glm::vec3(0.0f, 0.0f, 20.0f));
+		// glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+		// shaders[0]->use_material(rougher_mat);
+		// landscape.draw(shaders[0]);
 
 		shaders[0]->unuse();
 
